@@ -72,6 +72,7 @@ class App(tk.Tk):
             "no_warnings": True,
             "overwrites": True,
             "nopart": True,
+            "noplaylist": True,
         }
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
