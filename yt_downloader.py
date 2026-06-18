@@ -10,7 +10,7 @@ import yt_dlp
 import imageio_ffmpeg
 
 FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
-DEFAULT_DIR = os.path.expanduser("~/Movies/YT Downloads")
+DEFAULT_DIR = os.path.join(os.path.expanduser("~"), "Downloads")
 os.makedirs(DEFAULT_DIR, exist_ok=True)
 
 
