@@ -73,6 +73,7 @@ class App(tk.Tk):
             "overwrites": True,
             "nopart": True,
             "noplaylist": True,
+            "cookiesfrombrowser": ("chrome",),
         }
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
