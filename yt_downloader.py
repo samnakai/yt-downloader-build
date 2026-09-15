@@ -66,7 +66,7 @@ class App(tk.Tk):
         browsers = (
             ["chrome", "edge", "firefox"]
             if is_windows
-            else ["chrome", "safari", "firefox"]
+            else ["safari", "chrome", "firefox"]
         )
         for browser in browsers:
             try:
