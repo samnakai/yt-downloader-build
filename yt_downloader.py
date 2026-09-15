@@ -61,7 +61,25 @@ class App(tk.Tk):
         elif d["status"] == "finished":
             self.status_var.set("Merging...")
 
+    def find_browser_cookies(self):
+        is_windows = sys.platform == "win32"
+        browsers = (
+            ["chrome", "edge", "firefox"]
+            if is_windows
+            else ["chrome", "safari", "firefox"]
+        )
+        for browser in browsers:
+            try:
+                import yt_dlp
+                with yt_dlp.YoutubeDL({"cookiesfrombrowser": (browser,), "quiet": True}) as ydl:
+                    ydl.cookiejar  # triggers cookie load
+                return (browser,)
+            except Exception:
+                continue
+        return None
+
     def run_download(self, url, out_dir):
+        cookies = self.find_browser_cookies()
         ydl_opts = {
             "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
             "merge_output_format": "mp4",
@@ -73,8 +91,9 @@ class App(tk.Tk):
             "overwrites": True,
             "nopart": True,
             "noplaylist": True,
-            "cookiesfrombrowser": ("chrome",),
         }
+        if cookies:
+            ydl_opts["cookiesfrombrowser"] = cookies
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=True)
