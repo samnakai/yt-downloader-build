@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'yt_downloader.py'
+      - 'yt_downloader_web.py'
 
 jobs:
   build-windows:
@@ -14,8 +14,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install yt-dlp imageio-ffmpeg pyinstaller
-      - run: pyinstaller --noconfirm --windowed --onefile --name "YT Downloader" yt_downloader.py
+      - run: pip install yt-dlp imageio-ffmpeg pyinstaller flask
+      - run: pyinstaller --noconfirm --windowed --onefile --name "YT Downloader" yt_downloader_web.py
       - uses: actions/upload-artifact@v4
         with:
           name: YT-Downloader-Windows
@@ -28,9 +28,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install yt-dlp imageio-ffmpeg pyinstaller
-      - run: pyinstaller --noconfirm --windowed --onefile --name "YT Downloader" yt_downloader.py
+      - run: pip install yt-dlp imageio-ffmpeg pyinstaller flask
+      - run: pyinstaller --noconfirm --windowed --onefile --name "YT Downloader" yt_downloader_web.py
       - uses: actions/upload-artifact@v4
         with:
           name: YT-Downloader-macOS
-          path: dist/YT Downloader.app
+          path: dist/YT Downloader
