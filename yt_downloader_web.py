@@ -215,13 +215,27 @@ def run_download(url, out_dir):
 def make_ppt_compatible(filename, set_progress):
     root, _ = os.path.splitext(filename)
     out = root + "_ppt.mp4"
+    # Scale to even dimensions (required by libx264), cap at 1080p
+    scale_filter = (
+        "scale='if(gt(iw,1920),1920,trunc(iw/2)*2)'"
+        ":'if(gt(ih,1080),1080,trunc(ih/2)*2)'"
+        ":force_original_aspect_ratio=decrease"
+        ",pad=ceil(iw/2)*2:ceil(ih/2)*2"
+    )
     cmd = [
         FFMPEG_PATH, "-y", "-i", filename,
-        "-vf", "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease",
-        "-c:v", "libx264", "-profile:v", "high", "-pix_fmt", "yuv420p",
+        "-vf", scale_filter,
+        "-c:v", "libx264",
+        "-profile:v", "baseline",   # baseline = widest Windows PPT compatibility
+        "-level", "3.1",
+        "-pix_fmt", "yuv420p",
         "-preset", "medium", "-crf", "26",
-        "-c:a", "aac", "-b:a", "128k",
+        "-c:a", "aac",
+        "-ar", "44100",             # standard sample rate Windows expects
+        "-ac", "2",                 # stereo
+        "-b:a", "128k",
         "-movflags", "+faststart",
+        "-brand", "mp42",           # MP4 brand Windows Media Player/PPT prefer
         out,
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
